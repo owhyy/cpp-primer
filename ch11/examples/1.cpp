@@ -8,7 +8,6 @@
 int main() {
   std::set<std::string> exclude = {"The", "But", "And", "Or", "An", "A",
                                    "the", "but", "and", "or", "an", "a"};
-  std::set<char> punctuation = {',', '.', ':', ';', '?', '!'};
   std::map<std::string, size_t> word_count;
   std::string word;
 
@@ -22,7 +21,7 @@ int main() {
       new_word[0] = toupper(new_word[0]);
       ++word_count[new_word];
     }
-    for (const auto &w : word_count)
+  for (const auto &w : word_count)
     std::cout << w.first << " occurs " << w.second
               << ((w.second > 1) ? " times" : " time") << '\n';
 }

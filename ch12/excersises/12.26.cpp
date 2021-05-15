@@ -16,15 +16,12 @@ int main() {
   auto q = p;
 
   string s;
-  while (cin >> s && q != p + n) {
+  while (cin >> s && q != p + n)
     alloc.construct(++q, s);
-  }
-  for (int i = 0; i != n; ++i)
-    cout << *q;
-  /* const size_t size = q - p; */
-  /* cout << size; */
 
-  while (q != p)
-    alloc.destroy(q--);
+  while (q != p) {
+    cout << *--q;
+    alloc.destroy(q);
+  }
   alloc.deallocate(p, n);
 }

@@ -10,17 +10,8 @@ StrVec::StrVec(std::initializer_list<std::string> il)
     push_back(i);
 }
 
-/* void StrVec::free() { */
-/*   if (elements) { */
-/*     for (auto p = last_element; p != elements;) */
-/*       alloc.destroy(--p); */
-/*     alloc.deallocate(elements, cap - elements); */
-/*   } */
-/* } */
-
 void StrVec::free() {
   if (elements) {
-    auto p = last_element;
     std::for_each(elements, last_element,
                   [this](std::string &p) { alloc.destroy(&p); });
     alloc.deallocate(elements, cap - elements);

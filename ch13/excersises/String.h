@@ -6,6 +6,7 @@
 #include <utility>
 
 class String {
+
 public:
   String() : first_character(nullptr), last_character(nullptr), cap(nullptr) {}
   String(const char *);
@@ -25,8 +26,6 @@ private:
   std::allocator<char> alloc;
 
   inline void free();
-  void reallocate();
-  void check_if_in_order();
   std::pair<char *, char *> allocate_n_chars(const char *b, const char *e);
 
   char *first_character;

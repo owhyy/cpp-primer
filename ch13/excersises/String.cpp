@@ -11,7 +11,6 @@ String::String(const char *cp) {
   for (auto i = 0; i != newsize; ++i) {
     alloc.construct(dest++, *cp++);
   }
-  /* free(); */
   first_character = data;
   last_character = dest;
   cap = first_character + newsize;
@@ -33,21 +32,6 @@ String &String::operator=(const String &s) {
 }
 
 String::~String() { free(); }
-
-void String::reallocate() {
-  auto newsize = (size() ? 2 * size() : 1);
-  auto data = alloc.allocate(newsize);
-  auto elem = first_character;
-  auto dest = last_character;
-  for (auto i = 0; i != size(); ++i) {
-    alloc.construct(dest++, std::move(*elem++));
-  }
-  free();
-
-  first_character = data;
-  last_character = dest;
-  cap = first_character + newsize;
-}
 
 std::pair<char *, char *> String::allocate_n_chars(const char *b,
                                                    const char *e) {

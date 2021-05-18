@@ -43,19 +43,14 @@ StrVec &StrVec::operator=(const StrVec &rhs) {
 
 void StrVec::reallocate() {
   auto sz = (size() ? 2 * size() : 1); // allocate 2x the size
-  auto data = alloc.allocate(sz);      // where the allocation happens
-  auto dest = data;                    // where to construct
-  auto elem = elements;                // first member
-  for (auto i = 0; i != size(); ++i) {
-    alloc.construct(
-        dest++,
-        std::move(*elem++)); // move each member into new destination (data)
-  }
+  auto first = alloc.allocate(sz);
+  auto last = std::uninitialized_copy(std::make_move_iterator(begin()),
+                                      std::make_move_iterator(end()), first);
   free(); // delete old data
 
   // initialize new data
-  elements = data;
-  last_element = dest;
+  elements = first;
+  last_element = last;
   cap = elements + sz;
 }
 
@@ -118,4 +113,27 @@ void StrVec::reserve(int n) {
 
   } else
     return;
+}
+
+StrVec::StrVec(StrVec &&s) noexcept // don't throw exceptions
+    : elements(s.elements), last_element(s.last_element),
+      cap(s.cap) // steal the resources in s
+                 // and initialize them in the new StrVec
+{
+  s.elements = s.last_element = s.cap =
+      nullptr; // leave the old object in a safe to delete state
+}
+
+StrVec &StrVec::operator=(StrVec &&s) noexcept {
+  if (this != &s) // check agains self assignment
+  {
+    free();                // free existing elements
+    elements = s.elements; // take over old elements
+    last_element = s.last_element;
+    cap = s.cap;
+    s.elements = s.last_element = s.cap =
+        nullptr; // leave old elements in a destructible state
+  }
+
+  return *this;
 }

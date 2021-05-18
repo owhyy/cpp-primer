@@ -17,12 +17,14 @@ String::String(const char *cp) {
 }
 
 String::String(const String &s) {
+  std::cout << "Copy constructor called!\n";
   auto data = allocate_n_chars(s.begin(), s.end());
   first_character = data.first;
   last_character = cap = data.second;
 }
 
 String &String::operator=(const String &s) {
+  std::cout << "Copy-assign constructor called!\n";
   auto data = allocate_n_chars(s.begin(), s.end());
   free();
   first_character = data.first;
@@ -37,4 +39,20 @@ std::pair<char *, char *> String::allocate_n_chars(const char *b,
                                                    const char *e) {
   auto data = alloc.allocate(e - b);
   return {data, std::uninitialized_copy(b, e, data)};
+}
+
+String::String(String &&s) noexcept
+    : first_character(s.first_character), last_character(s.last_character),
+      cap(s.cap) {
+  s.first_character = s.last_character = s.cap = nullptr;
+}
+
+String &String::operator=(String &&s) noexcept {
+  if (this != &s) {
+    free();
+    first_character = s.first_character;
+    last_character = s.last_character;
+    cap = s.cap;
+  }
+  return *this;
 }

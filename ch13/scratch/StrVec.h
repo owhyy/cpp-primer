@@ -9,6 +9,9 @@ public:
   StrVec(std::initializer_list<std::string> sl);
   StrVec(const StrVec &);
   StrVec &operator=(const StrVec &);
+
+  StrVec &operator=(StrVec &&) noexcept;
+  StrVec(StrVec &&) noexcept;
   ~StrVec();
 
   void push_back(const std::string &s) {

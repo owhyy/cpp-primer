@@ -18,6 +18,5 @@ struct NoDtor {
   NoDtor() = default;
   ~NoDtor() = delete;
 };
-
 /* NoDtor n; */
 /* NoDtor *nd = new NoDtor(); */

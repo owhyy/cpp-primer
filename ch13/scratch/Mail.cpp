@@ -88,3 +88,26 @@ void Folder::add_messages(const Folder &f) {
   for (auto m : f.messages)
     m->add_folder(this);
 }
+
+void Message::move_folders(Message *m) {
+  folders = std::move(m->folders); // use set move assignment
+  for (auto f : folders)           // for every Folder
+  {
+    f->remove_message(m); // remove old message from folder
+    f->add_message(this); // add new message to folder
+  }
+  m->folders.clear(); // ensure that destroying m is harmless
+  // isn't this unnecessary tho?
+}
+
+Message::Message(Message &&m) : contents(std::move(m.contents)) {
+  move_folders(&m);
+}
+Message &Message::operator=(Message &&rhs) {
+  if (this != &rhs) {
+    remove_from_folders();
+    contents = std::move(rhs.contents);
+    move_folders(&rhs);
+  }
+  return *this;
+}

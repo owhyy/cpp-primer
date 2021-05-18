@@ -1,4 +1,5 @@
 #pragma once
+
 #include <set>
 #include <string>
 class Folder;
@@ -10,11 +11,15 @@ class Message {
 public:
   explicit Message(const std::string &s = "") : contents(s) {}
   Message(const Message &);
+  Message &operator=(Message &&);
+  Message(Message &&m);
   Message &operator=(const Message &);
   ~Message();
 
   void save(Folder &);   // adding one message to the folder
   void remove(Folder &); // removing one message from the folder
+
+  void move_folders(Message *m);
 
 private:
   std::string contents;

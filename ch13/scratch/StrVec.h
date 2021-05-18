@@ -1,38 +1,43 @@
+
+#include <memory>
+#include <new>
 #include <string>
-// memory implementation for a vector-like class
+
 class StrVec {
 public:
-  StrVec() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
-
+  StrVec() : elements(nullptr), last_element(nullptr), cap(nullptr) {}
+  StrVec(std::initializer_list<std::string> sl);
   StrVec(const StrVec &);
   StrVec &operator=(const StrVec &);
   ~StrVec();
-  void push_back(const std::string &);
-  size_t size() const { return first_free - elements; } // nr of elements in use
-  size_t capacity() const {
-    return cap - elements;
-  } // nr of elements the array can hold
-  std::string *begin() const { return elements; } // first element
-  std::string *end() const { return first_free; } // last element
+
+  void push_back(const std::string &s) {
+    check_n_allocate();
+    alloc.construct(last_element++, s);
+  }
+
+  std::string *begin() const { return elements; }
+  std::string *end() const { return last_element; }
+
+  size_t size() const { return last_element - elements; }
+  size_t capacity() const { return cap - elements; }
+
+  void resize(int n);
+  void resize(int n, const std::string &);
+  void reserve(int n);
 
 private:
-  std::allocator<std::string> alloc; // allocates memory used by the
-                                     // functions that add elements
+  std::string *elements;
+  std::string *last_element;
+  std::string *cap;
 
-  // utilities for copy construct, destructor etc.
-
-  // reallocates StrVec when there is no room to add a new element(when size
-  // equals capacity)
+  std::allocator<std::string> alloc;
+  std::pair<std::string *, std::string *> allocate_n_copy(const std::string *b,
+                                                          const std::string *e);
+  void reallocate();
+  void free();
   void check_n_allocate() {
     if (size() == capacity())
       reallocate();
   }
-  std::pair<std::string *, std::string *> allocate_n_copy(const std::string *,
-                                                          const std::string *);
-  void free();       // destroy elements and deallocate
-  void reallocate(); // get more space and copy elements into it
-
-  std::string *elements;   // first element in array
-  std::string *first_free; // first free element(last + 1)
-  std::string *cap;        // one past the end of array(max size of array)
 };

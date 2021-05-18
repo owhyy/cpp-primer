@@ -9,7 +9,7 @@ String::String(const char *cp) {
   auto elem = cp[0];
   auto dest = data;
   for (auto i = 0; i != newsize; ++i) {
-    alloc.construct(dest++, *cp++);
+    alloc.construct(dest++, std::move(*cp++));
   }
   first_character = data;
   last_character = dest;

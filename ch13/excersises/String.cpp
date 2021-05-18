@@ -2,16 +2,16 @@
 #include "String.h"
 #include <cstring>
 #include <iostream>
-String::String(const char *cp) {
 
+String::String(const char *cp) {
   auto newsize = strlen(cp);
   auto data = alloc.allocate(newsize);
-  auto elem = first_character;
-  auto dest = last_character;
+  auto elem = cp[0];
+  auto dest = data;
   for (auto i = 0; i != newsize; ++i) {
-    alloc.construct(dest++, cp);
+    alloc.construct(dest++, *cp++);
   }
-  free();
+  /* free(); */
   first_character = data;
   last_character = dest;
   cap = first_character + newsize;
@@ -49,7 +49,8 @@ void String::reallocate() {
   cap = first_character + newsize;
 }
 
-std::pair<char *, char *> String::allocate_n_chars(char *b, char *e) {
+std::pair<char *, char *> String::allocate_n_chars(const char *b,
+                                                   const char *e) {
   auto data = alloc.allocate(e - b);
   return {data, std::uninitialized_copy(b, e, data)};
 }

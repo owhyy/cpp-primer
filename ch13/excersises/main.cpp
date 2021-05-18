@@ -1,3 +1,7 @@
 #include "String.h"
-
-int main() { String s("Ana"); }
+#include <iostream>
+int main() {
+  String s("Ana");
+  for (auto i : s)
+    std::cout << i;
+}

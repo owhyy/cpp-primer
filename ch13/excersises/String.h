@@ -27,7 +27,7 @@ private:
   inline void free();
   void reallocate();
   void check_if_in_order();
-  std::pair<char *, char *> allocate_n_chars(char *b, char *e);
+  std::pair<char *, char *> allocate_n_chars(const char *b, const char *e);
 
   char *first_character;
   char *last_character;
@@ -35,6 +35,9 @@ private:
 };
 
 void String::free() {
-  std::for_each(first_character, last_character,
-                [this](char &c) { alloc.destroy(&c); });
+  if (first_character) {
+    std::for_each(first_character, last_character,
+                  [this](char &c) { alloc.destroy(&c); });
+    alloc.deallocate(first_character, cap - first_character);
+  }
 }

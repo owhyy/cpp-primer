@@ -4,6 +4,7 @@
 #include <iostream>
 
 String::String(const char *cp) {
+  std::cout << "Default constructor called!\n";
   auto newsize = strlen(cp);
   auto data = alloc.allocate(newsize);
   auto elem = cp[0];
@@ -44,11 +45,13 @@ std::pair<char *, char *> String::allocate_n_chars(const char *b,
 String::String(String &&s) noexcept
     : first_character(s.first_character), last_character(s.last_character),
       cap(s.cap) {
+  std::cout << "Move constructor called!\n";
   s.first_character = s.last_character = s.cap = nullptr;
 }
 
 String &String::operator=(String &&s) noexcept {
   if (this != &s) {
+    std::cout << "Move-assign constructor called!\n";
     free();
     first_character = s.first_character;
     last_character = s.last_character;

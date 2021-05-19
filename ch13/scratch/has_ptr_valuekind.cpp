@@ -9,6 +9,8 @@ class HasPtr {
 public:
   HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0) {}
   HasPtr(const HasPtr &);
+  HasPtr(HasPtr &&) noexcept;
+  HasPtr &operator=(HasPtr &&) noexcept;
   HasPtr &operator=(const HasPtr &);
   ~HasPtr() { delete ps; }
 
@@ -35,8 +37,19 @@ HasPtr &HasPtr::operator=(const HasPtr &orig) {
 inline void swap(HasPtr &lhs, HasPtr &rhs) {
   std::cout << "Swapping " << *lhs.ps << " to " << *rhs.ps << '\n';
   using std::swap;
-  swap(lhs.ps, rhs.ps);
+  swap(lhs.ps,
+       rhs.ps); // swaps the pointers, doesn't create and allocate a new object
   swap(lhs.i, rhs.i);
+}
+
+HasPtr::HasPtr(HasPtr &&p) noexcept : ps(p.ps), i(p.i) {
+  p.i = 0;
+  p.ps = 0;
+}
+
+HasPtr &HasPtr::operator=(HasPtr &&rhs) noexcept {
+  swap(*this, rhs);
+  return *this;
 }
 
 int main() {

@@ -24,12 +24,6 @@ StrVec::allocate_n_copy(const std::string *b, const std::string *e) {
   return {data, std::uninitialized_copy(b, e, data)};
 }
 
-StrVec::StrVec(const StrVec &s) {
-  auto data = allocate_n_copy(s.begin(), s.end());
-  elements = data.first;
-  cap = last_element = data.second;
-}
-
 StrVec::~StrVec() { free(); }
 
 StrVec &StrVec::operator=(const StrVec &rhs) {
@@ -136,4 +130,10 @@ StrVec &StrVec::operator=(StrVec &&s) noexcept {
   }
 
   return *this;
+}
+
+StrVec::StrVec(const StrVec &s) {
+  auto data = allocate_n_copy(s.begin(), s.end());
+  elements = data.first;
+  cap = last_element = data.second;
 }

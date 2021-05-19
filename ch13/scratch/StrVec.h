@@ -19,6 +19,11 @@ public:
     alloc.construct(last_element++, s);
   }
 
+  void push_back(std::string &&s) {
+    check_n_allocate();
+    alloc.construct(last_element++, std::move(s));
+  }
+
   std::string *begin() const { return elements; }
   std::string *end() const { return last_element; }
 

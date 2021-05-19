@@ -9,7 +9,7 @@ public:
   HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0) {}
   HasPtr(const HasPtr &);     // copy constr
   HasPtr(HasPtr &&) noexcept; // move constr
-  /* HasPtr &operator=(HasPtr &&) noexcept; */
+  HasPtr &operator=(HasPtr &&) noexcept;
   /* HasPtr &operator=(const HasPtr &orig); */
   HasPtr &operator=(HasPtr);
 
@@ -53,22 +53,20 @@ HasPtr &HasPtr::operator=(HasPtr rhs) // slow, 6-9 ms on 12 calls
   return *this;
 }
 
-/* HasPtr & */
-/* HasPtr::operator=(HasPtr &&rhs) noexcept // not that fast (6ms on 12 calls
- * but ) */
-/*                                          // still faster than combining both
- */
+HasPtr &
+HasPtr::operator=(HasPtr &&rhs) noexcept // not that fast (6ms on 12 calls ) but
+                                         // still faster than combining both
 
-/* { */
-/*   std::cout << "Move-assign noswap constructor called!\n"; */
-/*   ps = rhs.ps; */
-/*   i = rhs.i; */
+{
+  std::cout << "Move-assign noswap constructor called!\n";
+  ps = rhs.ps;
+  i = rhs.i;
 
-/*   rhs.ps = 0; */
-/*   rhs.i = 0; */
+  rhs.ps = 0;
+  rhs.i = 0;
 
-/*   return *this; */
-/* } */
+  return *this;
+}
 
 /* HasPtr &HasPtr::operator=(const HasPtr &orig) // very fast (0 ms on 40 */
 /*                                               // copies) */
@@ -96,7 +94,7 @@ int main() {
   HasPtr p10("test 5");
 
   /* p1 = p2; */
-  p2 = p3;
+  /* p2 = p3; */
   /* p4 = p4; */
   /* p4 = p5; */
 
@@ -127,3 +125,4 @@ int main() {
   auto t1 = high_resolution_clock::now();
   std::cout << duration_cast<milliseconds>(t1 - t0).count() << "ms\n";
 }
+// 13.54: not changing the swap version results in an ambiguous overload

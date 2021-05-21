@@ -6,7 +6,6 @@
 #include <utility>
 
 class String {
-
 public:
   String() : first_character(nullptr), last_character(nullptr), cap(nullptr) {}
   String(const char *);
@@ -23,6 +22,8 @@ public:
   const char &operator[](size_t n) const { return *(first_character + n); }
 
   size_t size() const { return last_character - first_character; }
+
+  friend inline std::ostream &operator<<(std::ostream &os, const String &);
 
 private:
   std::allocator<char> alloc;
@@ -41,4 +42,10 @@ void String::free() {
                   [this](char &c) { alloc.destroy(&c); });
     alloc.deallocate(first_character, cap - first_character);
   }
+}
+
+inline std::ostream &operator<<(std::ostream &os, const String &obj) {
+  for (auto i = obj.first_character; i != obj.last_character; ++i)
+    os << i;
+  return os;
 }

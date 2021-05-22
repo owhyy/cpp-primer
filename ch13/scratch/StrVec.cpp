@@ -4,6 +4,7 @@
 #include <memory>
 #include <new>
 #include <utility>
+
 StrVec::StrVec(std::initializer_list<std::string> il)
     : elements(nullptr), last_element(nullptr), cap(nullptr) {
   for (auto i : il)
@@ -136,4 +137,12 @@ StrVec::StrVec(const StrVec &s) {
   auto data = allocate_n_copy(s.begin(), s.end());
   elements = data.first;
   cap = last_element = data.second;
+}
+
+StrVec &StrVec::operator=(std::initializer_list<std::string> il) {
+  auto data = allocate_n_copy(il.begin(), il.end());
+  free();
+  elements = data.first;
+  last_element = cap = data.second;
+  return *this;
 }

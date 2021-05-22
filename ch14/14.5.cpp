@@ -19,6 +19,13 @@ public:
   Object(const string &sh, const string &cl) : Object(sh, cl, 0, 0, 0) {}
   Object(int he, int wi, int wg) : Object("", "", he, wi, wg) {}
   Object(int he) : Object("", "", he, 0, 0) {}
+  string Shape() const { return shape; }
+  string Color() const { return color; }
+  int Height() const { return height; }
+  int Width() const { return width; }
+  int Weight() const { return weight; }
+
+  inline Object &operator=(const std::string &);
 
   Object &operator++() {
     height++;
@@ -42,14 +49,15 @@ private:
   int weight = 0;
 };
 
-Object operator+(const Object &lhs, const Object &rhs) {
-  Object sum = lhs;
-  sum += rhs;
-  return sum;
+Object operator+(Object lhs, const Object &rhs) {
+  lhs += rhs;
+  return lhs;
 }
 
 std::istream &operator>>(std::istream &is, Object &sd) {
   is >> sd.shape >> sd.color >> sd.height >> sd.width >> sd.weight;
+  if (!is)
+    sd = Object();
   return is;
 }
 
@@ -58,4 +66,17 @@ std::ostream &operator<<(std::ostream &os, const Object &sd) {
   return os;
 }
 
+bool operator==(const Object &lhs, const Object &rhs) {
+  if (lhs.Shape() == rhs.Shape() && lhs.Color() == rhs.Color() &&
+      lhs.Height() == rhs.Height() && lhs.Width() == rhs.Width() &&
+      lhs.Weight() == rhs.Weight())
+    return true;
+  return false;
+}
+
+bool operator!=(const Object &lhs, const Object &rhs) { return !(lhs == rhs); }
+inline Object &Object::operator=(const std::string &s) {
+  shape = s;
+  return *this;
+}
 int main() { return 0; }

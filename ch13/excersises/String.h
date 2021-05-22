@@ -1,10 +1,10 @@
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <new>
 #include <string>
 #include <utility>
-
 class String {
 public:
   String() : first_character(nullptr), last_character(nullptr), cap(nullptr) {}
@@ -45,7 +45,33 @@ void String::free() {
 }
 
 inline std::ostream &operator<<(std::ostream &os, const String &obj) {
-  for (auto i = obj.first_character; i != obj.last_character; ++i)
-    os << i;
+  for (auto i = 0; i != obj.size(); ++i)
+    os << obj[i];
   return os;
+}
+bool operator==(const String &lhs, const String &rhs) {
+  if (lhs.size() != rhs.size())
+    return false;
+  if (lhs.begin() != rhs.begin())
+    return false;
+  if (lhs.end() != rhs.end())
+    return false;
+  for (auto i = 0; i != lhs.size(); ++i)
+    if (lhs[i] == rhs[i])
+      return true;
+  return false;
+}
+bool operator!=(const String &lhs, const String &rhs) { return !(lhs == rhs); }
+
+bool operator<(const String &lhs, const String &rhs) {
+  return lhs.size() < rhs.size();
+}
+bool operator>(const String &lhs, const String &rhs) {
+  return rhs.size() < lhs.size();
+}
+bool operator<=(const String &lhs, const String &rhs) {
+  return !(lhs.size() > rhs.size());
+}
+bool operator>=(const String &lhs, const String &rhs) {
+  return !(lhs.size() < rhs.size());
 }

@@ -4,7 +4,7 @@
 #include <iostream>
 
 String::String(const char *cp) {
-  std::cout << "Default constructor called!\n";
+  /* std::cout << "Default constructor called!\n"; */
   auto newsize = strlen(cp);
   auto data = alloc.allocate(newsize);
   auto elem = cp[0];

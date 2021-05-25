@@ -8,40 +8,63 @@ using std::string;
 using std::vector;
 
 class Object {
-  friend std::istream &operator>>(std::istream &, Object &);
-  friend std::ostream &operator<<(std::ostream &, const Object &);
+  friend std::istream& operator>>(std::istream&, Object&);
+  friend std::ostream& operator<<(std::ostream&, const Object&);
 
-public:
+  public:
   Object(string sh, string cl, int he, int wi, int wg)
-      : shape(sh), color(cl), height(he), width(wi), weight(wg) {}
-  Object() : Object("", "", 0, 0, 0) {}
-  Object(const string &sh) : Object(sh, "", 0, 0, 0) {}
-  Object(const string &sh, const string &cl) : Object(sh, cl, 0, 0, 0) {}
-  Object(int he, int wi, int wg) : Object("", "", he, wi, wg) {}
-  Object(int he) : Object("", "", he, 0, 0) {}
+      : shape(sh)
+      , color(cl)
+      , height(he)
+      , width(wi)
+      , weight(wg)
+  {
+  }
+  Object()
+      : Object("", "", 0, 0, 0)
+  {
+  }
+  Object(const string& sh)
+      : Object(sh, "", 0, 0, 0)
+  {
+  }
+  Object(const string& sh, const string& cl)
+      : Object(sh, cl, 0, 0, 0)
+  {
+  }
+  Object(int he, int wi, int wg)
+      : Object("", "", he, wi, wg)
+  {
+  }
+  Object(int he)
+      : Object("", "", he, 0, 0)
+  {
+  }
   string Shape() const { return shape; }
   string Color() const { return color; }
   int Height() const { return height; }
   int Width() const { return width; }
   int Weight() const { return weight; }
+  explicit operator bool() const;
+  inline Object& operator=(const std::string&);
 
-  inline Object &operator=(const std::string &);
-
-  Object &operator++() {
+  Object& operator++()
+  {
     height++;
     width++;
     weight++;
     return *this;
   }
 
-  Object &operator+=(const Object &rhs) {
+  Object& operator+=(const Object& rhs)
+  {
     height += rhs.height;
     width += rhs.width;
     weight += rhs.weight;
     return *this;
   }
 
-private:
+  private:
   string shape;
   string color;
   int height = 0;
@@ -49,34 +72,42 @@ private:
   int weight = 0;
 };
 
-Object operator+(Object lhs, const Object &rhs) {
+Object operator+(Object lhs, const Object& rhs)
+{
   lhs += rhs;
   return lhs;
 }
 
-std::istream &operator>>(std::istream &is, Object &sd) {
+std::istream& operator>>(std::istream& is, Object& sd)
+{
   is >> sd.shape >> sd.color >> sd.height >> sd.width >> sd.weight;
   if (!is)
     sd = Object();
   return is;
 }
 
-std::ostream &operator<<(std::ostream &os, const Object &sd) {
+std::ostream& operator<<(std::ostream& os, const Object& sd)
+{
   os << sd.shape << sd.color << sd.height << sd.width << sd.weight;
   return os;
 }
 
-bool operator==(const Object &lhs, const Object &rhs) {
-  if (lhs.Shape() == rhs.Shape() && lhs.Color() == rhs.Color() &&
-      lhs.Height() == rhs.Height() && lhs.Width() == rhs.Width() &&
-      lhs.Weight() == rhs.Weight())
+bool operator==(const Object& lhs, const Object& rhs)
+{
+  if (lhs.Shape() == rhs.Shape() && lhs.Color() == rhs.Color() && lhs.Height() == rhs.Height() && lhs.Width() == rhs.Width() && lhs.Weight() == rhs.Weight())
     return true;
   return false;
 }
 
-bool operator!=(const Object &lhs, const Object &rhs) { return !(lhs == rhs); }
-inline Object &Object::operator=(const std::string &s) {
+bool operator!=(const Object& lhs, const Object& rhs) { return !(lhs == rhs); }
+inline Object& Object::operator=(const std::string& s)
+{
   shape = s;
   return *this;
+}
+
+Object::operator bool() const
+{
+  return (height > 0 && width > 0 && weight > 0) ? true : false;
 }
 int main() { return 0; }

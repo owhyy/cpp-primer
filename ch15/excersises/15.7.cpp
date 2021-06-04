@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+
 class Discount {
   friend std::ostream &operator<<(std::ostream &os, const Discount &obj) {
     os << obj.bookNo << ' ' << obj.count << ' ' << obj.revenue;

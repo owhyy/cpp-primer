@@ -3,9 +3,12 @@
 #include "Quote.h"
 #include <memory>
 #include <set>
+
 class Basket {
 public:
   void add_item(const std::shared_ptr<Quote> &sale) { items.insert(sale); }
+  void add_item(const Quote &sale);
+  void add_item(Quote &&sale);
   double total_recepit(std::ostream &) const;
 
 private:
@@ -15,15 +18,3 @@ private:
   }
   std::multiset<std::shared_ptr<Quote>, decltype(compare) *> items{compare};
 };
-
-double Basket::total_recepit(std::ostream &os) const {
-  double sum = 0.0;
-  for (auto iter = items.cbegin(); iter != items.cend();
-       iter = items.upper_bound(
-           *iter)) { // upper_bound ignores elements that have the same key,
-                     // going straight to the next diferent element
-    sum += print_total(os, **iter, items.count(*iter));
-  }
-  os << "Total Sale: " << sum << '\n';
-  return sum;
-}

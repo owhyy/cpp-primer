@@ -31,6 +31,9 @@ public:
   }
 
   double net_price(std::size_t) const override;
+  Bulk_quote *clone() const & override { return new Bulk_quote(*this); }
+  Bulk_quote *clone() && override { return new Bulk_quote(std::move(*this)); }
+
   ~Bulk_quote() override { std::cout << "Bulk_quote destructor\n"; }
 };
 

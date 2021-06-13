@@ -1,7 +1,7 @@
 #ifndef DISC_QUOTE_H
 #define DISC_QUOTE_H
-
 #include "Quote.h"
+
 class Disc_quote : public Quote {
 public:
   Disc_quote(){};

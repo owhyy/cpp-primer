@@ -15,7 +15,7 @@ template <typename T> T &Blob<T>::back() {
   return data->back();
 }
 
-template <typename T> const T &Blob<T>::back() const {
+template <typename T> T &Blob<T>::back() const {
   check(0, "back on empty Blob");
   return data->back();
 }
@@ -25,7 +25,7 @@ template <typename T> T &Blob<T>::front() {
   return data->front();
 }
 
-template <typename T> const T &Blob<T>::front() const {
+template <typename T> T &Blob<T>::front() const {
   check(0, "front on empty Blob");
   return data->front();
 }
@@ -35,7 +35,7 @@ template <typename T> T &Blob<T>::operator[](size_type i) {
   return (*data)[i];
 }
 
-template <typename T> const T &Blob<T>::operator[](size_type i) const {
+template <typename T> T &Blob<T>::operator[](size_type i) const {
   check(i, "index out of range");
   return (*data)[i];
 }
@@ -55,8 +55,16 @@ Blob<T>::Blob(std::initializer_list<T> il)
     : data(std::make_shared<std::vector<T>>(il)) {}
 
 // blobptr
+template <typename T> BlobPtr<T> &BlobPtr<T>::operator++() { return ++this; }
+template <typename T> BlobPtr<T> &BlobPtr<T>::operator--() { return --this; }
+
 template <typename T> BlobPtr<T> BlobPtr<T>::operator++(int) {
   BlobPtr ret = *this;
   ++*this;
+  return ret;
+}
+template <typename T> BlobPtr<T> BlobPtr<T>::operator--(int) {
+  BlobPtr ret = *this;
+  --*this;
   return ret;
 }
